@@ -22,7 +22,10 @@ module.exports = {
         assetModuleFilename: '[name]-[hash][ext][query]',
     },
     resolve: {
-        extensions: ['*', '.js', '.ts', '.tsx'],
+        extensions: ['*', '.js', '.ts'],
+        alias: {
+            'pixi.js': path.resolve('./node_modules/pixi.js'),
+        },
     },
     module: {
         rules: [{

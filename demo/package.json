@@ -4,25 +4,26 @@
     "description": "",
     "main": "index.js",
     "scripts": {
-      "build": "webpack --config webpack.dev.js",
-      "start": "npm --prefix .. run build && webpack serve --open --config webpack.dev.js"
+        "build": "webpack --config webpack.dev.js",
+        "start": "npm --prefix .. run build && webpack serve --open --config webpack.dev.js"
     },
     "author": "",
     "license": "ISC",
     "devDependencies": {
-      "@babel/core": "^7.12.3",
-      "@babel/preset-env": "^7.12.1",
-      "babel-loader": "^8.1.0",
-      "clean-webpack-plugin": "^4.0.0",
-      "html-webpack-plugin": "^5.5.0",
-      "webpack": "^5.65.0",
-      "webpack-cli": "^4.9.1",
-      "webpack-dev-server": "^4.7.2",
-      "webpack-merge": "^5.8.0"
+        "@babel/core": "^7.12.3",
+        "@babel/preset-env": "^7.12.1",
+        "babel-loader": "^8.1.0",
+        "clean-webpack-plugin": "^4.0.0",
+        "html-webpack-plugin": "^5.5.0",
+        "webpack": "^5.65.0",
+        "webpack-cli": "^4.9.1",
+        "webpack-dev-server": "^4.7.2",
+        "webpack-merge": "^5.8.0"
     },
     "dependencies": {
-      "@remvst/mobile-controls": "file:..",
-      "ts-loader": "^9.2.6",
-      "typescript": "^4.1.3"
+        "@remvst/mobile-controls": "file:..",
+        "pixi.js": "^7.3.2",
+        "ts-loader": "^9.2.6",
+        "typescript": "^5.2.2"
     }
-  }
+}

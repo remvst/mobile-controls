@@ -31,7 +31,6 @@ export abstract class MobileControls {
         this.view.style.position = 'absolute';
         this.view.style.zIndex = '99';
         this.view.style.left = this.view.style.right = this.view.style.top = this.view.style.bottom = '0px';
-        this.resize();
 
         window.addEventListener('resize', () => this.resize());
 
@@ -42,7 +41,13 @@ export abstract class MobileControls {
         this.view.addEventListener('touchcancel', (event) => this.updateTouches(event));
     }
 
-    abstract updateLayout(): void;
+    abstract addControls(): void;
+    abstract updateLayout(width: number, height: number): void;
+
+    setup() {
+        this.addControls();
+        this.resize();
+    }
 
     destroy() {
         this.stage.destroy({
@@ -64,7 +69,7 @@ export abstract class MobileControls {
 
     resize() {
         this.renderer.resize(window.innerWidth, window.innerHeight);
-        this.updateLayout();
+        this.updateLayout(window.innerWidth, window.innerHeight);
 
         this.needsRerender = true;
         this.render();
