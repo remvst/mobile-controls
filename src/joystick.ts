@@ -13,7 +13,7 @@ export class Joystick implements Control {
     private readonly wiggleView = new Graphics();
     private readonly stickView = new Graphics();
 
-    touchIdentifier: number = null;
+    touchIdentifier: number | null = null;
 
     constructor(readonly radius: number = 50) {
         this.wiggleView.beginFill(0x0, 0.5);

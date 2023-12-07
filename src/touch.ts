@@ -4,5 +4,5 @@ import { Control } from "./control";
 export interface Touch {
     identifier: number;
     position: Vector2Like;
-    claimedBy: Control;
+    claimedBy: Control | null;
 };

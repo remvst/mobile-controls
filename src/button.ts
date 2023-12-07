@@ -13,7 +13,7 @@ export class Button implements Control {
 
     onDownStateChanged: (down: boolean) => void = () => {};
 
-    touchIdentifier: number = null;
+    touchIdentifier: number | null = null;
 
     constructor(
         icon: Texture,

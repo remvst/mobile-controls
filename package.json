@@ -11,9 +11,7 @@
   "license": "UNLICENSED",
   "dependencies": {
     "@remvst/geometry": "^2.5.1",
-    "pixi.js": "^7.3.2",
-    "rxjs": "^7.8.0",
-    "uuid": "^9.0.0"
+    "pixi.js": "^7.3.2"
   },
   "devDependencies": {
     "@types/node": "^18.11.5",
