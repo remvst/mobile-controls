@@ -1,0 +1,23 @@
+{
+  "name": "@remvst/mobile-controls",
+  "version": "1.0.0",
+  "description": "",
+  "main": "lib/index.js",
+  "scripts": {
+    "build": "rm -rf lib && tsc",
+    "prepublishOnly": "npm i && npm run build"
+  },
+  "author": "Rémi Vansteelandt",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "@remvst/geometry": "^2.5.1",
+    "pixi.js": "^7.3.2",
+    "rxjs": "^7.8.0",
+    "uuid": "^9.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^18.11.5",
+    "jasmine": "^4.4.0",
+    "typescript": "^5.2.2"
+  }
+}
