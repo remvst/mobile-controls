@@ -1,7 +1,7 @@
 import { Texture } from 'pixi.js';
-import { Sprite } from 'pixi.js';
 import UpIcon from '../assets/up.png';
 import { MobileControls, Joystick, Button } from '@remvst/mobile-controls';
+import { Rectangle } from '@remvst/geometry';
 
 class MyControls extends MobileControls {
 
@@ -9,18 +9,28 @@ class MyControls extends MobileControls {
     readonly button = new Button(Texture.from(UpIcon));
 
     addControls() {
+        this.button.touchArea = new Rectangle();
+
         this.addControl(this.joystick);
         this.addControl(this.button);
     }
 
     updateLayout(width: number, height: number) {
         this.joystick.view.position.set(
-            this.joystick.radius + 20, 
+            this.joystick.radius + 20,
             height - this.joystick.radius - 20,
         );
         this.button.view.position.set(
-            width - this.button.radius - 20, 
+            width - this.button.radius - 20,
             height - this.button.radius - 20,
+        );
+
+        // Extend the button's touch area
+        this.button.touchArea?.centerAround(
+            this.button.view.position.x,
+            this.button.view.position.y,
+            this.button.radius * 3,
+            this.button.radius * 3,
         );
     }
 }

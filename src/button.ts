@@ -1,4 +1,4 @@
-import { distance } from "@remvst/geometry";
+import { Rectangle, distance } from "@remvst/geometry";
 import { Container, Graphics, Sprite, Texture } from "pixi.js";
 import { Control } from "./control";
 import { Touch } from "./touch";
@@ -14,6 +14,7 @@ export class Button implements Control {
     onDownStateChanged: (down: boolean) => void = () => {};
 
     touchIdentifier: number | null = null;
+    touchArea: Rectangle | null = null;
 
     constructor(
         icon: Texture,
@@ -50,8 +51,10 @@ export class Button implements Control {
                 const { position, identifier, claimedBy } = touch;
                 if (claimedBy && claimedBy !== this) continue;
 
-                const dist = distance(position, center);
-                if (identifier === this.touchIdentifier || dist < this.radius) {
+                const touchContained = this.touchArea
+                    ? this.touchArea?.containsPoint(position)
+                    : distance(position, center) < this.radius;
+                if (identifier === this.touchIdentifier || touchContained) {
                     isTouched = true;
                     this.isDown = true;
                     this.touchIdentifier = identifier;
