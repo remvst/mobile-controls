@@ -14,8 +14,6 @@
     "pixi.js": "^7.3.2"
   },
   "devDependencies": {
-    "@types/node": "^18.11.5",
-    "jasmine": "^4.4.0",
     "typescript": "^5.2.2"
   }
 }
