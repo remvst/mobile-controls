@@ -3,6 +3,10 @@ import * as PIXI from 'pixi.js';
 import { Control } from './control';
 import { Touch } from './touch';
 
+interface TouchEventLike {
+    readonly touches: TouchList;
+}
+
 export abstract class MobileControls {
 
     readonly view: HTMLCanvasElement;
@@ -16,7 +20,7 @@ export abstract class MobileControls {
 
     private readonly renderer: PIXI.IRenderer<HTMLCanvasElement>;
 
-    constructor() {
+    constructor(includeMouseEvents: boolean = false) {
         this.renderer = PIXI.autoDetectRenderer<HTMLCanvasElement>({
             'width': 1,
             'height': 1,
@@ -35,10 +39,26 @@ export abstract class MobileControls {
         window.addEventListener('resize', () => this.resize());
 
         this.view.addEventListener('contextmenu', (event) => event.preventDefault());
-        this.view.addEventListener('touchstart', (event) => this.updateTouches(event));
-        this.view.addEventListener('touchmove', (event) => this.updateTouches(event))
-        this.view.addEventListener('touchend', (event) => this.updateTouches(event));
-        this.view.addEventListener('touchcancel', (event) => this.updateTouches(event));
+        this.view.addEventListener('touchstart', (event) => this.onTouchEvent(event));
+        this.view.addEventListener('touchmove', (event) => this.onTouchEvent(event))
+        this.view.addEventListener('touchend', (event) => this.onTouchEvent(event));
+        this.view.addEventListener('touchcancel', (event) => this.onTouchEvent(event));
+
+        if (includeMouseEvents) {
+            // Fake touches based on mouse events
+            let mouseDown = false;
+            this.view.addEventListener('mousedown', (event) => {
+                mouseDown = true;
+                this.updateTouches([event] as any as TouchList);
+            });
+            this.view.addEventListener('mousemove', (event) => {
+                if (mouseDown) this.updateTouches([event] as any as TouchList);
+            });
+            this.view.addEventListener('mouseup', (event) => {
+                mouseDown = false;
+                this.updateTouches([] as any as TouchList);
+            });
+        }
     }
 
     abstract addControls(): void;
@@ -75,16 +95,19 @@ export abstract class MobileControls {
         this.render();
     }
 
-    private updateTouches(event: TouchEvent) {
+    private onTouchEvent(event: TouchEvent) {
         event.preventDefault();
         event.stopPropagation();
+        this.updateTouches(event.touches);
+    }
 
+    private updateTouches(touches: TouchList) {
         const rect = this.view.getBoundingClientRect();
 
         const mapped: Touch[] = [];
         const seenIdentifiers = new Set<number>();
 
-        for (const touch of event.touches) {
+        for (const touch of touches) {
             const relativeX = (touch.pageX - rect.left) / (rect.right - rect.left);
             const relativeY = (touch.pageY - rect.top) / (rect.bottom - rect.top);
 

@@ -39,7 +39,7 @@ window.addEventListener('load', async () => {
     const upTexture = Texture.from(UpIcon);
     await upTexture.baseTexture.resource.load();
 
-    const controls = new MyControls();
+    const controls = new MyControls(true);
     controls.setup();
     document.body.appendChild(controls.view);
 
