@@ -3,10 +3,6 @@ import * as PIXI from 'pixi.js';
 import { Control } from './control';
 import { Touch } from './touch';
 
-interface TouchEventLike {
-    readonly touches: TouchList;
-}
-
 export abstract class MobileControls {
 
     readonly view: HTMLCanvasElement;
@@ -66,6 +62,11 @@ export abstract class MobileControls {
 
     setup() {
         this.addControls();
+
+        for (const control of this.controls) {
+            control.onChange(() => this.needsRerender = true);
+        }
+
         this.resize();
     }
 
@@ -138,8 +139,6 @@ export abstract class MobileControls {
                 this.claimMap.delete(identifier);
             }
         }
-
-        this.needsRerender = true;
     }
 
     render() {

@@ -2,16 +2,21 @@ import { Rectangle, distance } from "@remvst/geometry";
 import { Container, Graphics, Sprite, Texture } from "pixi.js";
 import { Control } from "./control";
 import { Touch } from "./touch";
+import { MobileControls } from "./mobile-controls";
 
 export class Button implements Control {
     readonly view = new Container();
     private readonly shapeView = new Graphics();
     private readonly iconView = new Sprite();
 
+    parent: MobileControls = null!;
+
     private _enabled = true;
     isDown = false;
 
     onDownStateChanged: (down: boolean) => void = () => {};
+
+    private readonly onChangeListeners: ((button: Button) => void)[] = [];
 
     touchIdentifier: number | null = null;
     touchArea: Rectangle | null = null;
@@ -34,8 +39,15 @@ export class Button implements Control {
     get enabled() { return this._enabled; }
 
     set enabled(enabled: boolean) {
+        const oldValue = this._enabled;
         this._enabled = enabled;
         this.updateView();
+
+        if (enabled !== oldValue) {
+            for (const listener of this.onChangeListeners) {
+                listener(this);
+            }
+        }
     }
 
     update(touches: Touch[]) {
@@ -69,6 +81,9 @@ export class Button implements Control {
 
         if (this.isDown !== wasDown) {
             this.onDownStateChanged(this.isDown);
+            for (const listener of this.onChangeListeners) {
+                listener(this);
+            }
         }
 
         this.updateView();
@@ -78,5 +93,9 @@ export class Button implements Control {
         this.view.visible = this.enabled;
         this.shapeView.tint = this.isDown ? 0xffffff : 0x0;
         this.iconView.tint = this.isDown ? 0x0 : 0xffffff;
+    }
+
+    onChange(listener: (control: Button) => void): void {
+        this.onChangeListeners.push(listener);
     }
 }

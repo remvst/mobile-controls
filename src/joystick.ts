@@ -13,6 +13,8 @@ export class Joystick implements Control {
     private readonly wiggleView = new Graphics();
     private readonly stickView = new Graphics();
 
+    private readonly onChangeListeners: ((joystick: Joystick) => void)[] = [];
+
     touchIdentifier: number | null = null;
 
     constructor(readonly radius: number = 50) {
@@ -29,12 +31,22 @@ export class Joystick implements Control {
     get enabled() { return this._enabled; }
 
     set enabled(enabled: boolean) {
+        const oldValue = this._enabled;
         this._enabled = enabled;
         this.updateView();
+
+        if (enabled !== oldValue) {
+            for (const listener of this.onChangeListeners) {
+                listener(this);
+            }
+        }
     }
 
     update(touches: Touch[]) {
         let isTouchingJoystick = false;
+
+        const oldAngle = this.angle;
+        const oldForce = this.force;
 
         const center = this.view.position;
 
@@ -62,6 +74,12 @@ export class Joystick implements Control {
         }
 
         this.updateView();
+
+        if (this.angle !== oldAngle || this.force !== oldForce) {
+            for (const listener of this.onChangeListeners) {
+                listener(this);
+            }
+        }
     }
 
     updateView() {
@@ -70,5 +88,9 @@ export class Joystick implements Control {
             Math.cos(this.angle) * this.force * this.radius,
             Math.sin(this.angle) * this.force * this.radius,
         );
+    }
+
+    onChange(listener: (control: Joystick) => void): void {
+        this.onChangeListeners.push(listener);
     }
 }
