@@ -1,7 +1,7 @@
+import { distance } from "@remvst/geometry";
 import { Container, Graphics } from "pixi.js";
 import { Control } from "./control";
-import { Touch } from './touch';
-import { distance } from "@remvst/geometry";
+import { Touch } from "./touch";
 
 export class Joystick implements Control {
     private _enabled = true;
@@ -28,7 +28,9 @@ export class Joystick implements Control {
         this.view.addChild(this.wiggleView, this.stickView);
     }
 
-    get enabled() { return this._enabled; }
+    get enabled() {
+        return this._enabled;
+    }
 
     set enabled(enabled: boolean) {
         const oldValue = this._enabled;
@@ -56,12 +58,18 @@ export class Joystick implements Control {
                 if (claimedBy && claimedBy !== this) continue;
 
                 const distanceToJoystick = distance(position, center);
-                if (identifier === this.touchIdentifier || distanceToJoystick < this.radius + 30) {
+                if (
+                    identifier === this.touchIdentifier ||
+                    distanceToJoystick < this.radius + 30
+                ) {
                     isTouchingJoystick = true;
                     this.touchIdentifier = identifier;
                     touch.claimedBy = this;
 
-                    const angle = Math.atan2(position.y - center.y, position.x - center.x);
+                    const angle = Math.atan2(
+                        position.y - center.y,
+                        position.x - center.x,
+                    );
                     this.force = Math.min(1, distanceToJoystick / this.radius);
                     this.angle = angle;
                 }

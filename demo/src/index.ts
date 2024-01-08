@@ -1,10 +1,9 @@
-import { Texture } from 'pixi.js';
-import UpIcon from '../assets/up.png';
-import { MobileControls, Joystick, Button } from '@remvst/mobile-controls';
-import { Rectangle } from '@remvst/geometry';
+import { Rectangle } from "@remvst/geometry";
+import { Button, Joystick, MobileControls } from "@remvst/mobile-controls";
+import { Texture } from "pixi.js";
+import UpIcon from "../assets/up.png";
 
 class MyControls extends MobileControls {
-
     readonly joystick = new Joystick();
     readonly button = new Button(Texture.from(UpIcon));
 
@@ -35,7 +34,7 @@ class MyControls extends MobileControls {
     }
 }
 
-window.addEventListener('load', async () => {
+window.addEventListener("load", async () => {
     const upTexture = Texture.from(UpIcon);
     await upTexture.baseTexture.resource.load();
 

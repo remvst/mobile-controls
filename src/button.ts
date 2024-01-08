@@ -1,8 +1,8 @@
 import { Rectangle, distance } from "@remvst/geometry";
 import { Container, Graphics, Sprite, Texture } from "pixi.js";
 import { Control } from "./control";
-import { Touch } from "./touch";
 import { MobileControls } from "./mobile-controls";
+import { Touch } from "./touch";
 
 export class Button implements Control {
     readonly view = new Container();
@@ -36,7 +36,9 @@ export class Button implements Control {
         this.view.addChild(this.shapeView, this.iconView);
     }
 
-    get enabled() { return this._enabled; }
+    get enabled() {
+        return this._enabled;
+    }
 
     set enabled(enabled: boolean) {
         const oldValue = this._enabled;
