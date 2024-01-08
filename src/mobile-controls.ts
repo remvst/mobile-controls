@@ -109,7 +109,7 @@ export abstract class MobileControls {
         this.renderer.resize(window.innerWidth, window.innerHeight);
         this.updateLayout(window.innerWidth, window.innerHeight);
 
-        this.needsRerender = true;
+        this.setNeedsRerender();
         this.render();
     }
 
@@ -170,6 +170,10 @@ export abstract class MobileControls {
         if (visible === this.visible) return;
         this.visible = visible;
         this.view.style.display = visible ? "block" : "none";
-        if (visible) this.needsRerender = true;
+        if (visible) this.setNeedsRerender();
+    }
+
+    setNeedsRerender() {
+        this.needsRerender = true;
     }
 }
