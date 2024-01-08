@@ -2,16 +2,19 @@ import { Rectangle } from "@remvst/geometry";
 import { Button, Joystick, MobileControls } from "@remvst/mobile-controls";
 import { Texture } from "pixi.js";
 import UpIcon from "../assets/up.png";
+import FireIcon from "../assets/fire.png";
 
 class MyControls extends MobileControls {
     readonly joystick = new Joystick();
     readonly button = new Button(Texture.from(UpIcon));
+    readonly fireButton = new Button(Texture.from(FireIcon));
 
     addControls() {
         this.button.touchArea = new Rectangle();
 
         this.addControl(this.joystick);
         this.addControl(this.button);
+        this.addControl(this.fireButton);
     }
 
     updateLayout(width: number, height: number) {
@@ -22,6 +25,10 @@ class MyControls extends MobileControls {
         this.button.view.position.set(
             width - this.button.radius - 20,
             height - this.button.radius - 20,
+        );
+        this.fireButton.view.position.set(
+            this.button.view.position.x - this.button.radius - this.fireButton.radius - 20,
+            this.button.view.position.y,
         );
 
         // Extend the button's touch area
