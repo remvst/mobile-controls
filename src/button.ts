@@ -28,7 +28,7 @@ export class Button implements Control {
         this.shapeView.beginFill(0xffffff, 0.5);
         this.shapeView.drawCircle(0, 0, this.radius);
 
-        icon.on('update', () => {
+        icon.on("update", () => {
             for (const listener of this.onChangeListeners) {
                 listener(this);
             }

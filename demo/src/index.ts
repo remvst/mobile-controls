@@ -1,8 +1,8 @@
 import { Rectangle } from "@remvst/geometry";
 import { Button, Joystick, MobileControls } from "@remvst/mobile-controls";
 import { Texture } from "pixi.js";
-import UpIcon from "../assets/up.png";
 import FireIcon from "../assets/fire.png";
+import UpIcon from "../assets/up.png";
 
 class MyControls extends MobileControls {
     readonly joystick = new Joystick();
@@ -27,7 +27,10 @@ class MyControls extends MobileControls {
             height - this.button.radius - 20,
         );
         this.fireButton.view.position.set(
-            this.button.view.position.x - this.button.radius - this.fireButton.radius - 20,
+            this.button.view.position.x -
+                this.button.radius -
+                this.fireButton.radius -
+                20,
             this.button.view.position.y,
         );
 
