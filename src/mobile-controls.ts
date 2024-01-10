@@ -86,8 +86,8 @@ export abstract class MobileControls {
     destroy() {
         this.stage.destroy({
             children: true,
-            baseTexture: true,
-            texture: true,
+            baseTexture: false,
+            texture: false,
         });
         this.renderer.destroy(true);
     }
