@@ -14,7 +14,10 @@ export class Button implements Control {
     private _enabled = true;
     isDown = false;
 
+    retainsTouches = true;
+
     onDownStateChanged: (down: boolean) => void = () => {};
+    onClick: () => void = () => {};
 
     private readonly onChangeListeners: ((button: Button) => void)[] = [];
 
@@ -58,10 +61,12 @@ export class Button implements Control {
         }
     }
 
-    update(touches: Touch[]) {
+    update(touches: Touch[], previousTouchIdentifiers: Set<number>) {
         const center = this.view.position;
 
         const wasDown = this.isDown;
+        const previousTouchIdentifier = this.touchIdentifier;
+        let previousTouchIdentifierWasSeen = false;
         let isTouched = false;
 
         this.isDown = false;
@@ -71,10 +76,20 @@ export class Button implements Control {
                 const { position, identifier, claimedBy } = touch;
                 if (claimedBy && claimedBy !== this) continue;
 
+                if (touch.identifier === previousTouchIdentifier) {
+                    previousTouchIdentifierWasSeen = true;
+                }
+
+                const isNewTouch = !previousTouchIdentifiers.has(identifier);
+
                 const touchContained = this.touchArea
                     ? this.touchArea?.containsPoint(position)
                     : distance(position, center) < this.radius;
-                if (identifier === this.touchIdentifier || touchContained) {
+                if (
+                    (identifier === this.touchIdentifier &&
+                        this.retainsTouches) ||
+                    (touchContained && isNewTouch)
+                ) {
                     isTouched = true;
                     this.isDown = true;
                     this.touchIdentifier = identifier;
@@ -89,6 +104,11 @@ export class Button implements Control {
 
         if (this.isDown !== wasDown) {
             this.onDownStateChanged(this.isDown);
+
+            if (wasDown && !previousTouchIdentifierWasSeen) {
+                this.onClick();
+            }
+
             for (const listener of this.onChangeListeners) {
                 listener(this);
             }

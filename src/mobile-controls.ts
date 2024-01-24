@@ -13,6 +13,8 @@ export abstract class MobileControls {
 
     readonly controls: Control[] = [];
 
+    private readonly previousTouchIdentifiers = new Set<number>();
+
     private readonly renderer: PIXI.IRenderer<HTMLCanvasElement>;
 
     constructor(includeMouseEvents: boolean = false) {
@@ -95,7 +97,7 @@ export abstract class MobileControls {
     addControl(control: Control) {
         this.controls.push(control);
         this.stage.addChild(control.view);
-        control.update([]);
+        control.update([], this.previousTouchIdentifiers);
     }
 
     get width() {
@@ -144,7 +146,7 @@ export abstract class MobileControls {
         }
 
         for (const control of this.controls) {
-            control.update(mapped);
+            control.update(mapped, this.previousTouchIdentifiers);
         }
 
         for (const touch of mapped) {
@@ -157,6 +159,11 @@ export abstract class MobileControls {
             if (!seenIdentifiers.has(identifier)) {
                 this.claimMap.delete(identifier);
             }
+        }
+
+        this.previousTouchIdentifiers.clear();
+        for (const touch of mapped) {
+            this.previousTouchIdentifiers.add(touch.identifier);
         }
     }
 

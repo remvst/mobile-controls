@@ -52,6 +52,11 @@ window.addEventListener("load", async () => {
     controls.setup();
     document.body.appendChild(controls.view);
 
+    controls.button.retainsTouches = false;
+    controls.button.onClick = () => console.log("jump!");
+
+    controls.fireButton.onClick = () => console.log("fire!");
+
     const render = () => {
         controls.render();
         requestAnimationFrame(render);
