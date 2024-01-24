@@ -85,11 +85,18 @@ export class Button implements Control {
                 const touchContained = this.touchArea
                     ? this.touchArea?.containsPoint(position)
                     : distance(position, center) < this.radius;
-                if (
-                    (identifier === this.touchIdentifier &&
-                        this.retainsTouches) ||
-                    (touchContained && isNewTouch)
-                ) {
+
+                let claimTouch = false;
+
+                if (identifier === this.touchIdentifier) {
+                    if (this.retainsTouches || touchContained) {
+                        claimTouch = true;
+                    }
+                } else if (touchContained && isNewTouch) {
+                    claimTouch = true;
+                }
+
+                if (claimTouch) {
                     isTouched = true;
                     this.isDown = true;
                     this.touchIdentifier = identifier;
