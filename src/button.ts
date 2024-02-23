@@ -1,6 +1,7 @@
-import { distance } from "@remvst/geometry";
+import { Rectangle, distance } from "@remvst/geometry";
 import { Container, Graphics, Sprite, Texture } from "pixi.js";
 import { Control } from "./control";
+import { MobileControls } from "./mobile-controls";
 import { Touch } from "./touch";
 
 export class Button implements Control {
@@ -8,12 +9,20 @@ export class Button implements Control {
     private readonly shapeView = new Graphics();
     private readonly iconView = new Sprite();
 
+    parent: MobileControls = null!;
+
     private _enabled = true;
     isDown = false;
 
+    retainsTouches = true;
+
     onDownStateChanged: (down: boolean) => void = () => {};
+    onClick: () => void = () => {};
+
+    private readonly onChangeListeners: ((button: Button) => void)[] = [];
 
     touchIdentifier: number | null = null;
+    touchArea: Rectangle | null = null;
 
     constructor(
         icon: Texture,
@@ -21,6 +30,12 @@ export class Button implements Control {
     ) {
         this.shapeView.beginFill(0xffffff, 0.5);
         this.shapeView.drawCircle(0, 0, this.radius);
+
+        icon.on("update", () => {
+            for (const listener of this.onChangeListeners) {
+                listener(this);
+            }
+        });
 
         this.iconView.texture = icon;
         this.iconView.width = radius * 2;
@@ -30,17 +45,28 @@ export class Button implements Control {
         this.view.addChild(this.shapeView, this.iconView);
     }
 
-    get enabled() { return this._enabled; }
-
-    set enabled(enabled: boolean) {
-        this._enabled = enabled;
-        this.updateView();
+    get enabled() {
+        return this._enabled;
     }
 
-    update(touches: Touch[]) {
+    set enabled(enabled: boolean) {
+        const oldValue = this._enabled;
+        this._enabled = enabled;
+        this.updateView();
+
+        if (enabled !== oldValue) {
+            for (const listener of this.onChangeListeners) {
+                listener(this);
+            }
+        }
+    }
+
+    update(touches: Touch[], previousTouchIdentifiers: Set<number>) {
         const center = this.view.position;
 
         const wasDown = this.isDown;
+        const previousTouchIdentifier = this.touchIdentifier;
+        let previousTouchIdentifierWasSeen = false;
         let isTouched = false;
 
         this.isDown = false;
@@ -50,8 +76,27 @@ export class Button implements Control {
                 const { position, identifier, claimedBy } = touch;
                 if (claimedBy && claimedBy !== this) continue;
 
-                const dist = distance(position, center);
-                if (identifier === this.touchIdentifier || dist < this.radius) {
+                if (touch.identifier === previousTouchIdentifier) {
+                    previousTouchIdentifierWasSeen = true;
+                }
+
+                const isNewTouch = !previousTouchIdentifiers.has(identifier);
+
+                const touchContained = this.touchArea
+                    ? this.touchArea?.containsPoint(position)
+                    : distance(position, center) < this.radius;
+
+                let claimTouch = false;
+
+                if (identifier === this.touchIdentifier) {
+                    if (this.retainsTouches || touchContained) {
+                        claimTouch = true;
+                    }
+                } else if (touchContained && isNewTouch) {
+                    claimTouch = true;
+                }
+
+                if (claimTouch) {
                     isTouched = true;
                     this.isDown = true;
                     this.touchIdentifier = identifier;
@@ -66,6 +111,14 @@ export class Button implements Control {
 
         if (this.isDown !== wasDown) {
             this.onDownStateChanged(this.isDown);
+
+            if (wasDown && !previousTouchIdentifierWasSeen) {
+                this.onClick();
+            }
+
+            for (const listener of this.onChangeListeners) {
+                listener(this);
+            }
         }
 
         this.updateView();
@@ -75,5 +128,9 @@ export class Button implements Control {
         this.view.visible = this.enabled;
         this.shapeView.tint = this.isDown ? 0xffffff : 0x0;
         this.iconView.tint = this.isDown ? 0x0 : 0xffffff;
+    }
+
+    onChange(listener: (control: Button) => void): void {
+        this.onChangeListeners.push(listener);
     }
 }

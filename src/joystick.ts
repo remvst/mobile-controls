@@ -1,7 +1,7 @@
+import { distance } from "@remvst/geometry";
 import { Container, Graphics } from "pixi.js";
 import { Control } from "./control";
-import { Touch } from './touch';
-import { distance } from "@remvst/geometry";
+import { Touch } from "./touch";
 
 export class Joystick implements Control {
     private _enabled = true;
@@ -12,6 +12,8 @@ export class Joystick implements Control {
     readonly view = new Container();
     private readonly wiggleView = new Graphics();
     private readonly stickView = new Graphics();
+
+    private readonly onChangeListeners: ((joystick: Joystick) => void)[] = [];
 
     touchIdentifier: number | null = null;
 
@@ -26,15 +28,27 @@ export class Joystick implements Control {
         this.view.addChild(this.wiggleView, this.stickView);
     }
 
-    get enabled() { return this._enabled; }
+    get enabled() {
+        return this._enabled;
+    }
 
     set enabled(enabled: boolean) {
+        const oldValue = this._enabled;
         this._enabled = enabled;
         this.updateView();
+
+        if (enabled !== oldValue) {
+            for (const listener of this.onChangeListeners) {
+                listener(this);
+            }
+        }
     }
 
     update(touches: Touch[]) {
         let isTouchingJoystick = false;
+
+        const oldAngle = this.angle;
+        const oldForce = this.force;
 
         const center = this.view.position;
 
@@ -44,12 +58,18 @@ export class Joystick implements Control {
                 if (claimedBy && claimedBy !== this) continue;
 
                 const distanceToJoystick = distance(position, center);
-                if (identifier === this.touchIdentifier || distanceToJoystick < this.radius + 30) {
+                if (
+                    identifier === this.touchIdentifier ||
+                    distanceToJoystick < this.radius + 30
+                ) {
                     isTouchingJoystick = true;
                     this.touchIdentifier = identifier;
                     touch.claimedBy = this;
 
-                    const angle = Math.atan2(position.y - center.y, position.x - center.x);
+                    const angle = Math.atan2(
+                        position.y - center.y,
+                        position.x - center.x,
+                    );
                     this.force = Math.min(1, distanceToJoystick / this.radius);
                     this.angle = angle;
                 }
@@ -62,6 +82,12 @@ export class Joystick implements Control {
         }
 
         this.updateView();
+
+        if (this.angle !== oldAngle || this.force !== oldForce) {
+            for (const listener of this.onChangeListeners) {
+                listener(this);
+            }
+        }
     }
 
     updateView() {
@@ -70,5 +96,9 @@ export class Joystick implements Control {
             Math.cos(this.angle) * this.force * this.radius,
             Math.sin(this.angle) * this.force * this.radius,
         );
+    }
+
+    onChange(listener: (control: Joystick) => void): void {
+        this.onChangeListeners.push(listener);
     }
 }

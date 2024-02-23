@@ -2,17 +2,14 @@
     "name": "@remvst/mobile-controls-demo",
     "version": "1.0.0",
     "description": "",
-    "main": "index.js",
+    "private": true,
     "scripts": {
         "build": "webpack --config webpack.dev.js",
         "start": "npm --prefix .. run build && webpack serve --open --config webpack.dev.js"
     },
-    "author": "",
-    "license": "ISC",
+    "author": "Rémi Vansteelandt",
+    "license": "UNLICENSED",
     "devDependencies": {
-        "@babel/core": "^7.12.3",
-        "@babel/preset-env": "^7.12.1",
-        "babel-loader": "^8.1.0",
         "clean-webpack-plugin": "^4.0.0",
         "html-webpack-plugin": "^5.5.0",
         "webpack": "^5.65.0",

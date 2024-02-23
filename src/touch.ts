@@ -5,4 +5,4 @@ export interface Touch {
     identifier: number;
     position: Vector2Like;
     claimedBy: Control | null;
-};
+}
