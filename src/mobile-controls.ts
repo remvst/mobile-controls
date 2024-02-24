@@ -17,6 +17,8 @@ export abstract class MobileControls {
 
     private readonly renderer: PIXI.IRenderer<HTMLCanvasElement>;
 
+    private readonly onWindowResizeListener = () => this.resize();
+
     constructor(includeMouseEvents: boolean = false) {
         this.renderer = PIXI.autoDetectRenderer<HTMLCanvasElement>({
             width: 1,
@@ -37,7 +39,7 @@ export abstract class MobileControls {
             this.view.style.bottom =
                 "0px";
 
-        window.addEventListener("resize", () => this.resize());
+        window.addEventListener("resize", this.onWindowResizeListener);
 
         this.view.addEventListener("contextmenu", (event) =>
             event.preventDefault(),
@@ -92,6 +94,8 @@ export abstract class MobileControls {
             texture: false,
         });
         this.renderer.destroy(true);
+
+        window.removeEventListener("resize", this.onWindowResizeListener);
     }
 
     addControl(control: Control) {
