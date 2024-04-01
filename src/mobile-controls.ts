@@ -126,6 +126,8 @@ export abstract class MobileControls {
     }
 
     private updateTouches(touches: TouchList) {
+        if (this.stage.destroyed) return;
+
         const rect = this.view.getBoundingClientRect();
 
         const mapped: Touch[] = [];
@@ -173,6 +175,7 @@ export abstract class MobileControls {
 
     render() {
         if (!this.needsRerender) return;
+        if (this.stage.destroyed) return;
         this.needsRerender = false;
         this.renderer.render(this.stage);
     }
