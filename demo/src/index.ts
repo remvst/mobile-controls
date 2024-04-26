@@ -3,6 +3,7 @@ import { Button, Joystick, MobileControls } from "@remvst/mobile-controls";
 import { Texture } from "pixi.js";
 import FireIcon from "../assets/fire.png";
 import UpIcon from "../assets/up.png";
+import "pixi.js-legacy";
 
 class MyControls extends MobileControls {
     readonly joystick = new Joystick();

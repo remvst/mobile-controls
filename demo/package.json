@@ -19,7 +19,7 @@
     },
     "dependencies": {
         "@remvst/mobile-controls": "file:..",
-        "pixi.js": "^7.3.2",
+        "pixi.js-legacy": "^7.4.2",
         "ts-loader": "^9.2.6",
         "typescript": "^5.2.2"
     }

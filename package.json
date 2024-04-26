@@ -13,12 +13,15 @@
     "author": "Rémi Vansteelandt",
     "license": "UNLICENSED",
     "dependencies": {
-        "@remvst/geometry": "^2.5.1",
-        "pixi.js": "^7.3.2"
+        "@remvst/geometry": "^2.5.1"
     },
     "devDependencies": {
+        "pixi.js-legacy": "^7.3.2",
         "prettier": "3.1.1",
         "prettier-plugin-organize-imports": "^3.2.4",
         "typescript": "^5.2.2"
+    },
+    "peerDependencies": {
+        "pixi.js": "^7.3.2"
     }
 }
