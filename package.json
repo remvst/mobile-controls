@@ -1,6 +1,6 @@
 {
     "name": "@remvst/mobile-controls",
-    "version": "1.4.0",
+    "version": "1.4.1",
     "description": "Virtual controls for touch devices",
     "main": "lib/index.js",
     "scripts": {
@@ -16,12 +16,11 @@
         "@remvst/geometry": "^2.5.1"
     },
     "devDependencies": {
-        "pixi.js-legacy": "^7.3.2",
         "prettier": "3.1.1",
         "prettier-plugin-organize-imports": "^3.2.4",
         "typescript": "^5.2.2"
     },
     "peerDependencies": {
-        "pixi.js": "^7.3.2"
+        "pixi.js": "^7.x"
     }
 }
