@@ -25,6 +25,7 @@ module.exports = {
         extensions: [".js", ".ts"],
         alias: {
             "pixi.js": path.resolve("./node_modules/pixi.js"),
+            "pixi.js-legacy": path.resolve("./node_modules/pixi.js-legacy"),
         },
     },
     module: {
