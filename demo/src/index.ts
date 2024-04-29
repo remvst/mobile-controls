@@ -12,9 +12,9 @@ class MyControls extends MobileControls {
     addControls() {
         this.button.touchArea = new Rectangle();
 
+        this.addControl(this.fireButton);
         this.addControl(this.joystick);
         this.addControl(this.button);
-        this.addControl(this.fireButton);
     }
 
     updateLayout(width: number, height: number) {
@@ -55,7 +55,7 @@ window.addEventListener("load", async () => {
     controls.button.retainsTouches = false;
     controls.button.onClick = () => console.log("jump!");
 
-    controls.fireButton.onClick = () => console.log("fire!");
+    controls.fireButton.onClick = () => controls.destroy();
 
     const render = () => {
         controls.render();

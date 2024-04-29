@@ -153,6 +153,9 @@ export abstract class MobileControls {
 
         for (const control of this.controls) {
             control.update(mapped, this.previousTouchIdentifiers);
+
+            // In case this specific control caused destroy() to be called, make sure we stop
+            if (this.stage.destroyed) break;
         }
 
         for (const touch of mapped) {
