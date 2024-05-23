@@ -6,8 +6,8 @@ import { Touch } from "./touch";
 
 export class Button implements Control {
     readonly view = new Container();
-    private readonly shapeView = new Graphics();
-    private readonly iconView = new Sprite();
+    readonly shapeView = new Graphics();
+    readonly iconView = new Sprite();
 
     parent: MobileControls = null!;
 
