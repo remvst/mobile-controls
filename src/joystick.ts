@@ -32,6 +32,14 @@ export class Joystick implements Control {
         return this.view.position;
     }
 
+    get width(): number {
+        return this.radius * 2;
+    }
+
+    get height(): number {
+        return this.radius * 2;
+    }
+
     get enabled() {
         return this._enabled;
     }

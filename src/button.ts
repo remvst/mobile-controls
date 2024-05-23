@@ -49,6 +49,14 @@ export class Button implements Control {
         return this.view.position;
     }
 
+    get width() {
+        return this.radius * 2;
+    }
+
+    get height() {
+        return this.radius * 2;
+    }
+
     get enabled() {
         return this._enabled;
     }
