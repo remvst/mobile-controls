@@ -35,6 +35,13 @@ class MyControls extends MobileControls {
             this.button.view.position.y,
         );
 
+        this.joystick.claimArea.update(
+            0,
+            height / 2,
+            this.fireButton.view.position.x - 100,
+            height / 2,
+        );
+
         // Extend the button's touch area
         this.button.touchArea?.centerAround(
             this.button.view.position.x,

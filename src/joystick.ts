@@ -48,7 +48,7 @@ export class Joystick implements Control {
         }
     }
 
-    update(touches: Touch[]) {
+    update(touches: Touch[], previousTouchIdentifiers: Set<number>) {
         let isTouchingJoystick = false;
 
         const oldAngle = this.angle;
