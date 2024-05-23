@@ -9,6 +9,7 @@ export class DynamicJoystick extends Joystick {
     readonly claimArea = new Rectangle();
 
     private raf: number | null = null;
+    private isActive = false;
 
     constructor() {
         super();
@@ -32,6 +33,19 @@ export class DynamicJoystick extends Joystick {
         }
 
         super.update(touches, previousTouchIdentifiers);
+
+        let isActive = false;
+        for (const touch of touches) {
+            if (
+                touch.claimedBy === this ||
+                this.touchIdentifier === touch.identifier
+            ) {
+                isActive = true;
+                break;
+            }
+        }
+
+        this.isActive = isActive;
 
         if (this.isActive !== wasActive) {
             if (this.isActive) {
@@ -66,9 +80,5 @@ export class DynamicJoystick extends Joystick {
         if (this.isActive) {
             super.updateView();
         }
-    }
-
-    get isActive(): boolean {
-        return this.force > 0;
     }
 }
