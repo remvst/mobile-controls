@@ -26,11 +26,12 @@ class MyControls extends MobileControls {
         this.joystick.position.x = this.joystick.radius + 20;
         this.joystick.position.y = height - this.joystick.radius - 20;
 
-        this.button.position.x = width - this.button.radius - 20;
-        this.button.position.y = height - this.button.radius - 20;
-
-        this.fireButton.position.x = this.button.view.position.x - this.button.radius - this.fireButton.radius - 20;
-        this.fireButton.position.y = this.button.position.y;
+        this.linearLayout(
+            [this.button, this.fireButton],
+            { x: width - this.button.radius - 20, y: height - this.button.radius - 20 },
+            -(this.button.width + 20),
+            0,
+        );
 
         this.joystick.claimArea.update(
             0,
