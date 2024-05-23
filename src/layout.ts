@@ -25,7 +25,7 @@ export function radialLayout(
     startAngle: number = 0,
 ) {
     controls.forEach((button, i, arr) => {
-        const angle = i / arr.length * Math.PI * 2 + startAngle;
+        const angle = (i / arr.length) * Math.PI * 2 + startAngle;
 
         button.view.position.set(
             center.x + Math.cos(angle) * radius,

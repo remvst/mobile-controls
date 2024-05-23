@@ -10,6 +10,7 @@ export class DynamicJoystick extends Joystick {
 
     private raf: number | null = null;
     private isActive = false;
+    private lastForce = 0;
 
     constructor() {
         super();
@@ -47,6 +48,10 @@ export class DynamicJoystick extends Joystick {
 
         this.isActive = isActive;
 
+        if (this.force) {
+            this.lastForce = this.force;
+        }
+
         if (this.isActive !== wasActive) {
             if (this.isActive) {
                 cancelAnimationFrame(this.raf!);
@@ -61,11 +66,15 @@ export class DynamicJoystick extends Joystick {
 
     private fadeOut() {
         const start = performance.now();
+        const initialForce = this.lastForce;
 
         const frame = () => {
             const now = performance.now();
             const progress = Math.min((now - start) / 200, 1);
             this.view.alpha = 1 - progress;
+            this.force = (0 - initialForce) * progress + initialForce;
+
+            this.updateView();
             this.notifyChanged();
 
             if (progress < 1) {
@@ -77,8 +86,8 @@ export class DynamicJoystick extends Joystick {
     }
 
     updateView() {
-        if (this.isActive) {
-            super.updateView();
-        }
+        // if (this.isActive) {
+        super.updateView();
+        // }
     }
 }

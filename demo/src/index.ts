@@ -38,7 +38,12 @@ class MyControls extends MobileControls {
         );
 
         radialLayout(
-            [this.jumpButton, this.attackButton, this.dashButton, this.interactButton],
+            [
+                this.jumpButton,
+                this.attackButton,
+                this.dashButton,
+                this.interactButton,
+            ],
             { x: width - 100, y: height - 100 },
             this.jumpButton.radius + 20,
             0,

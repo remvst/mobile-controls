@@ -100,9 +100,7 @@ export abstract class MobileControls {
         }
     }
 
-    addControls(): void {
-
-    }
+    addControls(): void {}
 
     abstract updateLayout(width: number, height: number): void;
 
