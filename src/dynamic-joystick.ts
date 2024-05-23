@@ -57,7 +57,7 @@ export class DynamicJoystick extends Joystick {
             if (progress < 1) {
                 this.raf = requestAnimationFrame(frame);
             }
-        }
+        };
 
         frame();
     }
