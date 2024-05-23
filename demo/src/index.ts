@@ -50,6 +50,7 @@ window.addEventListener("load", async () => {
     await upTexture.baseTexture.resource.load();
 
     const controls = new MyControls(true);
+    controls.setResolution(window.devicePixelRatio);
     controls.setup();
     document.body.appendChild(controls.view);
 

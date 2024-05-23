@@ -39,6 +39,9 @@ export abstract class MobileControls {
             this.view.style.bottom =
                 "0px";
 
+        this.view.style.width = "100%";
+        this.view.style.height = "100%";
+
         window.addEventListener("resize", this.onWindowResizeListener);
 
         this.view.addEventListener("contextmenu", (event) =>
@@ -109,6 +112,11 @@ export abstract class MobileControls {
     }
     get height() {
         return window.innerHeight;
+    }
+
+    setResolution(resolution: number) {
+        this.renderer.resolution = resolution;
+        this.resize();
     }
 
     resize() {
