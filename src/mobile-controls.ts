@@ -78,7 +78,9 @@ export abstract class MobileControls {
                 }
             }
 
-            this.view.style.cursor = this.hoveringControl ? "pointer" : "inherit";
+            this.view.style.cursor = this.hoveringControl
+                ? "pointer"
+                : "inherit";
         });
 
         if (includeMouseEvents) {

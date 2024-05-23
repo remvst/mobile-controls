@@ -23,33 +23,26 @@ class MyControls extends MobileControls {
     }
 
     updateLayout(width: number, height: number) {
-        this.joystick.view.position.set(
-            this.joystick.radius + 20,
-            height - this.joystick.radius - 20,
-        );
-        this.button.view.position.set(
-            width - this.button.radius - 20,
-            height - this.button.radius - 20,
-        );
-        this.fireButton.view.position.set(
-            this.button.view.position.x -
-                this.button.radius -
-                this.fireButton.radius -
-                20,
-            this.button.view.position.y,
-        );
+        this.joystick.position.x = this.joystick.radius + 20;
+        this.joystick.position.y = height - this.joystick.radius - 20;
+
+        this.button.position.x = width - this.button.radius - 20;
+        this.button.position.y = height - this.button.radius - 20;
+
+        this.fireButton.position.x = this.button.view.position.x - this.button.radius - this.fireButton.radius - 20;
+        this.fireButton.position.y = this.button.position.y;
 
         this.joystick.claimArea.update(
             0,
             height / 2,
-            this.fireButton.view.position.x - 100,
+            this.fireButton.position.x - 100,
             height / 2,
         );
 
         // Extend the button's touch area
         this.button.touchArea?.centerAround(
-            this.button.view.position.x,
-            this.button.view.position.y,
+            this.button.position.x,
+            this.button.position.y,
             this.button.radius * 3,
             this.button.radius * 3,
         );

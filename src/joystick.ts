@@ -1,4 +1,4 @@
-import { distance } from "@remvst/geometry";
+import { Vector2Like, distance } from "@remvst/geometry";
 import { Container, Graphics } from "pixi.js";
 import { Control } from "./control";
 import { Touch } from "./touch";
@@ -26,6 +26,10 @@ export class Joystick implements Control {
         this.stickView.drawCircle(0, 0, 20);
 
         this.view.addChild(this.wiggleView, this.stickView);
+    }
+
+    get position(): Vector2Like {
+        return this.view.position;
     }
 
     get enabled() {

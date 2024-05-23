@@ -1,4 +1,4 @@
-import { Rectangle, distance } from "@remvst/geometry";
+import { Rectangle, Vector2Like, distance } from "@remvst/geometry";
 import { Container, Graphics, Sprite, Texture } from "pixi.js";
 import { Control } from "./control";
 import { MobileControls } from "./mobile-controls";
@@ -43,6 +43,10 @@ export class Button implements Control {
         this.iconView.anchor.set(0.5, 0.5);
 
         this.view.addChild(this.shapeView, this.iconView);
+    }
+
+    get position(): Vector2Like {
+        return this.view.position;
     }
 
     get enabled() {
