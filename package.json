@@ -13,9 +13,9 @@
     "author": "Rémi Vansteelandt",
     "license": "UNLICENSED",
     "devDependencies": {
-        "prettier": "3.1.1",
+        "prettier": "3.2.5",
         "prettier-plugin-organize-imports": "^3.2.4",
-        "typescript": "^5.2.2"
+        "typescript": "^5.4.5"
     },
     "peerDependencies": {
         "@remvst/geometry": "^2.5.1",
