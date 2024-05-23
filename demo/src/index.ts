@@ -1,5 +1,9 @@
 import { Rectangle } from "@remvst/geometry";
-import { Button, DynamicJoystick, MobileControls } from "@remvst/mobile-controls";
+import {
+    Button,
+    DynamicJoystick,
+    MobileControls,
+} from "@remvst/mobile-controls";
 import { Texture } from "pixi.js";
 import "pixi.js-legacy";
 import FireIcon from "../assets/fire.png";
