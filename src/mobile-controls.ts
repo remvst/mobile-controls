@@ -82,11 +82,6 @@ export abstract class MobileControls {
 
     setup() {
         this.addControls();
-
-        for (const control of this.controls) {
-            control.onChange(() => (this.needsRerender = true));
-        }
-
         this.resize();
     }
 
@@ -105,6 +100,12 @@ export abstract class MobileControls {
         this.controls.push(control);
         this.stage.addChild(control.view);
         control.update([], this.previousTouchIdentifiers);
+
+        for (const control of this.controls) {
+            control.onChange(() => (this.needsRerender = true));
+        }
+
+        this.needsRerender = true;
     }
 
     get width() {

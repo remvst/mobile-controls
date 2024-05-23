@@ -38,9 +38,13 @@ export class Joystick implements Control {
         this.updateView();
 
         if (enabled !== oldValue) {
-            for (const listener of this.onChangeListeners) {
-                listener(this);
-            }
+            this.notifyChanged();
+        }
+    }
+
+    protected notifyChanged() {
+        for (const listener of this.onChangeListeners) {
+            listener(this);
         }
     }
 
@@ -84,9 +88,7 @@ export class Joystick implements Control {
         this.updateView();
 
         if (this.angle !== oldAngle || this.force !== oldForce) {
-            for (const listener of this.onChangeListeners) {
-                listener(this);
-            }
+            this.notifyChanged();
         }
     }
 

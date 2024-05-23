@@ -1,12 +1,12 @@
 import { Rectangle } from "@remvst/geometry";
-import { Button, Joystick, MobileControls } from "@remvst/mobile-controls";
+import { Button, DynamicJoystick, MobileControls } from "@remvst/mobile-controls";
 import { Texture } from "pixi.js";
 import "pixi.js-legacy";
 import FireIcon from "../assets/fire.png";
 import UpIcon from "../assets/up.png";
 
 class MyControls extends MobileControls {
-    readonly joystick = new Joystick();
+    readonly joystick = new DynamicJoystick();
     readonly button = new Button(Texture.from(UpIcon));
     readonly fireButton = new Button(Texture.from(FireIcon));
 
