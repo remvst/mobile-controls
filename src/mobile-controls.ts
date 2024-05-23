@@ -1,4 +1,4 @@
-import { Vector2, Vector2Like, distance } from "@remvst/geometry";
+import { Vector2, distance } from "@remvst/geometry";
 import * as PIXI from "pixi.js";
 import { Button } from "./button";
 import { Control } from "./control";
@@ -224,22 +224,5 @@ export abstract class MobileControls {
 
     setNeedsRerender() {
         this.needsRerender = true;
-    }
-
-    linearLayout(
-        controls: Control[],
-        startPosition: Vector2Like,
-        stepX: number,
-        stepY: number,
-    ) {
-        let { x, y } = startPosition;
-
-        controls.forEach((button, i, arr) => {
-            button.position.x = x;
-            button.position.y = y;
-
-            x += stepX;
-            y += stepY;
-        });
     }
 }

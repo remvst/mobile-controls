@@ -3,6 +3,7 @@ import {
     Button,
     DynamicJoystick,
     MobileControls,
+    linearLayout,
 } from "@remvst/mobile-controls";
 import { Texture } from "pixi.js";
 import "pixi.js-legacy";
@@ -26,7 +27,7 @@ class MyControls extends MobileControls {
         this.joystick.position.x = this.joystick.radius + 20;
         this.joystick.position.y = height - this.joystick.radius - 20;
 
-        this.linearLayout(
+        linearLayout(
             [this.button, this.fireButton],
             { x: width - this.button.radius - 20, y: height - this.button.radius - 20 },
             -(this.button.width + 20),
