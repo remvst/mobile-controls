@@ -12,26 +12,18 @@ import FireIcon from "../assets/fire.png";
 import UpIcon from "../assets/up.png";
 
 class MyControls extends MobileControls {
-    readonly joystick = new DynamicJoystick();
-    readonly button = new Button(Texture.from(UpIcon));
-    readonly fireButton = new Button(Texture.from(FireIcon));
+    readonly joystick = this.add(new DynamicJoystick());
+    readonly button = this.add(new Button(Texture.from(UpIcon)));
+    readonly fireButton = this.add(new Button(Texture.from(FireIcon)));
 
-    readonly jumpButton = new Button(Texture.from(UpIcon));
-    readonly attackButton = new Button(Texture.from(UpIcon));
-    readonly dashButton = new Button(Texture.from(UpIcon));
-    readonly interactButton = new Button(Texture.from(UpIcon));
+    readonly jumpButton = this.add(new Button(Texture.from(UpIcon)));
+    readonly attackButton = this.add(new Button(Texture.from(UpIcon)));
+    readonly dashButton = this.add(new Button(Texture.from(UpIcon)));
+    readonly interactButton = this.add(new Button(Texture.from(UpIcon)));
 
-    addControls() {
+    setup() {
+        super.setup();
         this.button.touchArea = new Rectangle();
-
-        this.addControl(this.fireButton);
-        this.addControl(this.joystick);
-        this.addControl(this.button);
-
-        this.addControl(this.jumpButton);
-        this.addControl(this.attackButton);
-        this.addControl(this.dashButton);
-        this.addControl(this.interactButton);
     }
 
     updateLayout(width: number, height: number) {

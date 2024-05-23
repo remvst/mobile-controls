@@ -100,7 +100,10 @@ export abstract class MobileControls {
         }
     }
 
-    abstract addControls(): void;
+    addControls(): void {
+
+    }
+
     abstract updateLayout(width: number, height: number): void;
 
     setup() {
@@ -119,7 +122,7 @@ export abstract class MobileControls {
         window.removeEventListener("resize", this.onWindowResizeListener);
     }
 
-    addControl(control: Control) {
+    add<ControlType extends Control>(control: ControlType): ControlType {
         this.controls.push(control);
         this.stage.addChild(control.view);
         control.update([], this.previousTouchIdentifiers);
@@ -129,6 +132,12 @@ export abstract class MobileControls {
         }
 
         this.needsRerender = true;
+
+        return control;
+    }
+
+    addControl<ControlType extends Control>(control: ControlType): ControlType {
+        return this.add(control);
     }
 
     get width() {
