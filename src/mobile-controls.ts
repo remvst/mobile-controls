@@ -1,5 +1,6 @@
-import { Vector2 } from "@remvst/geometry";
+import { Vector2, distance } from "@remvst/geometry";
 import * as PIXI from "pixi.js";
+import { Button } from "./button";
 import { Control } from "./control";
 import { Touch } from "./touch";
 
@@ -12,6 +13,7 @@ export abstract class MobileControls {
     private readonly claimMap = new Map<number, Control>();
 
     readonly controls: Control[] = [];
+    hoveringControl: Control | null = null;
 
     private readonly previousTouchIdentifiers = new Set<number>();
 
@@ -59,6 +61,25 @@ export abstract class MobileControls {
         this.view.addEventListener("touchcancel", (event) =>
             this.onTouchEvent(event),
         );
+
+        // Pointer cursor handling
+        this.view.addEventListener("mousemove", (event) => {
+            this.hoveringControl = null;
+
+            const position = { x: event.pageX, y: event.pageY };
+            for (const control of this.controls) {
+                if (
+                    control.enabled &&
+                    control instanceof Button &&
+                    distance(control.view.position, position) < control.radius
+                ) {
+                    this.hoveringControl = control;
+                    break;
+                }
+            }
+
+            this.view.style.cursor = this.hoveringControl ? "pointer" : "inherit";
+        });
 
         if (includeMouseEvents) {
             // Fake touches based on mouse events
