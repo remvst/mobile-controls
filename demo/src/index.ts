@@ -4,6 +4,7 @@ import {
     DynamicJoystick,
     MobileControls,
     linearLayout,
+    radialLayout,
 } from "@remvst/mobile-controls";
 import { Texture } from "pixi.js";
 import "pixi.js-legacy";
@@ -15,12 +16,22 @@ class MyControls extends MobileControls {
     readonly button = new Button(Texture.from(UpIcon));
     readonly fireButton = new Button(Texture.from(FireIcon));
 
+    readonly jumpButton = new Button(Texture.from(UpIcon));
+    readonly attackButton = new Button(Texture.from(UpIcon));
+    readonly dashButton = new Button(Texture.from(UpIcon));
+    readonly interactButton = new Button(Texture.from(UpIcon));
+
     addControls() {
         this.button.touchArea = new Rectangle();
 
         this.addControl(this.fireButton);
         this.addControl(this.joystick);
         this.addControl(this.button);
+
+        this.addControl(this.jumpButton);
+        this.addControl(this.attackButton);
+        this.addControl(this.dashButton);
+        this.addControl(this.interactButton);
     }
 
     updateLayout(width: number, height: number) {
@@ -29,8 +40,15 @@ class MyControls extends MobileControls {
 
         linearLayout(
             [this.button, this.fireButton],
-            { x: width - this.button.radius - 20, y: height - this.button.radius - 20 },
+            { x: width - this.button.radius - 20, y: this.button.radius + 20 },
             -(this.button.width + 20),
+            0,
+        );
+
+        radialLayout(
+            [this.jumpButton, this.attackButton, this.dashButton, this.interactButton],
+            { x: width - 100, y: height - 100 },
+            this.jumpButton.radius + 20,
             0,
         );
 

@@ -17,3 +17,19 @@ export function linearLayout(
         y += stepY;
     }
 }
+
+export function radialLayout(
+    controls: Control[],
+    center: Vector2Like,
+    radius: number,
+    startAngle: number = 0,
+) {
+    controls.forEach((button, i, arr) => {
+        const angle = i / arr.length * Math.PI * 2 + startAngle;
+
+        button.view.position.set(
+            center.x + Math.cos(angle) * radius,
+            center.y + Math.sin(angle) * radius,
+        );
+    });
+}
