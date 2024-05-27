@@ -106,8 +106,8 @@ export class Joystick implements Control {
         }
 
         if (this.isActive !== wasActive) {
-            if (!this.isActive)  {
-                this.onJoystickReleased()
+            if (!this.isActive) {
+                this.onJoystickReleased();
             }
         }
 
