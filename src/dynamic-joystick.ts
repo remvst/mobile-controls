@@ -9,8 +9,6 @@ export class DynamicJoystick extends Joystick {
     readonly claimArea = new Rectangle();
 
     private raf: number | null = null;
-    private isActive = false;
-    private lastForce = 0;
 
     constructor() {
         super();
@@ -35,44 +33,20 @@ export class DynamicJoystick extends Joystick {
 
         super.update(touches, previousTouchIdentifiers);
 
-        let isActive = false;
-        for (const touch of touches) {
-            if (
-                touch.claimedBy === this ||
-                this.touchIdentifier === touch.identifier
-            ) {
-                isActive = true;
-                break;
-            }
-        }
-
-        this.isActive = isActive;
-
-        if (this.force) {
-            this.lastForce = this.force;
-        }
-
-        if (this.isActive !== wasActive) {
-            if (this.isActive) {
-                cancelAnimationFrame(this.raf!);
-                this.raf = null;
-
-                this.view.alpha = 1;
-            } else {
-                this.fadeOut();
-            }
+        if (this.isActive && !wasActive) {
+            this.view.alpha = 1;
+            this.notifyChanged();
         }
     }
 
-    private fadeOut() {
+    protected onJoystickReleased() {
+        super.onJoystickReleased();
         const start = performance.now();
-        const initialForce = this.lastForce;
 
         const frame = () => {
             const now = performance.now();
             const progress = Math.min((now - start) / 200, 1);
             this.view.alpha = 1 - progress;
-            this.force = (0 - initialForce) * progress + initialForce;
 
             this.updateView();
             this.notifyChanged();

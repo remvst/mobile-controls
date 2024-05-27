@@ -22,8 +22,8 @@ class MyControls extends MobileControls {
     readonly interactButton = this.add(new Button(Texture.from(UpIcon)));
 
     setup() {
-        super.setup();
         this.button.touchArea = new Rectangle();
+        super.setup();
     }
 
     updateLayout(width: number, height: number) {

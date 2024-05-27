@@ -6,8 +6,12 @@ import { Touch } from "./touch";
 export class Joystick implements Control {
     private _enabled = true;
 
+    private resetJoystickAnimationFrame: number | null = null;
+
     angle: number = 0;
     force: number = 0;
+
+    protected displayedForce: number = 0;
 
     readonly view = new Container();
     private readonly wiggleView = new Graphics();
@@ -60,7 +64,12 @@ export class Joystick implements Control {
         }
     }
 
+    protected get isActive() {
+        return this.touchIdentifier !== null;
+    }
+
     update(touches: Touch[], previousTouchIdentifiers: Set<number>) {
+        const wasActive = this.isActive;
         let isTouchingJoystick = false;
 
         const oldAngle = this.angle;
@@ -93,8 +102,17 @@ export class Joystick implements Control {
         }
 
         if (!isTouchingJoystick) {
-            this.force = 0;
             this.touchIdentifier = null;
+        }
+
+        if (this.isActive !== wasActive) {
+            if (!this.isActive)  {
+                this.onJoystickReleased()
+            }
+        }
+
+        if (isTouchingJoystick) {
+            this.displayedForce = this.force;
         }
 
         this.updateView();
@@ -104,11 +122,34 @@ export class Joystick implements Control {
         }
     }
 
+    protected onJoystickReleased() {
+        this.force = 0;
+        this.touchIdentifier = null;
+
+        const start = performance.now();
+        const initialForce = this.displayedForce;
+
+        const frame = () => {
+            const now = performance.now();
+            const progress = Math.min((now - start) / 200, 1);
+            this.displayedForce = (0 - initialForce) * progress + initialForce;
+
+            this.updateView();
+            this.notifyChanged();
+
+            if (progress < 1) {
+                this.resetJoystickAnimationFrame = requestAnimationFrame(frame);
+            }
+        };
+
+        frame();
+    }
+
     updateView() {
         this.view.visible = this.enabled;
         this.stickView.position.set(
-            Math.cos(this.angle) * this.force * this.radius,
-            Math.sin(this.angle) * this.force * this.radius,
+            Math.cos(this.angle) * this.displayedForce * this.radius,
+            Math.sin(this.angle) * this.displayedForce * this.radius,
         );
     }
 
