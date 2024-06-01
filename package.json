@@ -1,6 +1,6 @@
 {
     "name": "@remvst/mobile-controls",
-    "version": "1.6.2",
+    "version": "1.6.3",
     "description": "Virtual controls for touch devices",
     "main": "lib/index.js",
     "scripts": {

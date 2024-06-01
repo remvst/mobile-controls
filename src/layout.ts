@@ -10,6 +10,8 @@ export function linearLayout(
     let { x, y } = startPosition;
 
     for (const control of controls) {
+        if (!control.enabled) continue;
+
         control.position.x = x;
         control.position.y = y;
 
@@ -24,7 +26,9 @@ export function radialLayout(
     radius: number,
     startAngle: number = 0,
 ) {
-    controls.forEach((button, i, arr) => {
+    const enabledControls = controls.filter(control => control.enabled);
+
+    enabledControls.forEach((button, i, arr) => {
         const angle = (i / arr.length) * Math.PI * 2 + startAngle;
 
         button.view.position.set(
