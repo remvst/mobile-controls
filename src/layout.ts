@@ -26,7 +26,7 @@ export function radialLayout(
     radius: number,
     startAngle: number = 0,
 ) {
-    const enabledControls = controls.filter(control => control.enabled);
+    const enabledControls = controls.filter((control) => control.enabled);
 
     enabledControls.forEach((button, i, arr) => {
         const angle = (i / arr.length) * Math.PI * 2 + startAngle;
