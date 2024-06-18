@@ -4,5 +4,8 @@ export * from "./dynamic-joystick";
 export * from "./joystick";
 export * from "./layout";
 export * from "./mobile-controls";
+export * from "./mobile-controls-mouse-handler";
+export * from "./mobile-controls-touch-handler";
 export * from "./standalone-mobile-controls";
 export * from "./touch";
+export * from "./utils";

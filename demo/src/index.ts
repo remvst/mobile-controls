@@ -74,7 +74,10 @@ window.addEventListener("load", async () => {
     const controls = new MyControls();
     controls.setup();
 
-    const controlsRenderer = new StandaloneMobileControlsRenderer(controls, true);
+    const controlsRenderer = new StandaloneMobileControlsRenderer(
+        controls,
+        true,
+    );
     controlsRenderer.setResolution(window.devicePixelRatio);
     controlsRenderer.setup();
     document.body.appendChild(controlsRenderer.view!);
