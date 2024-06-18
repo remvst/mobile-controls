@@ -4,15 +4,62 @@ import { Button } from "./button";
 import { MobileControls } from "./mobile-controls";
 import { Touch } from "./touch";
 
-export abstract class StandaloneMobileControls extends MobileControls {
-    readonly view: HTMLCanvasElement;
-    private readonly renderer: PIXI.IRenderer<HTMLCanvasElement>;
+export class StandaloneMobileControlsRenderer {
+
+    #visible = true;
+    #needsRerender = true;
+
+    view?: HTMLCanvasElement;
+    private renderer?: PIXI.IRenderer<HTMLCanvasElement>;
 
     private readonly onWindowResizeListener = () =>
         this.resize(window.innerWidth, window.innerHeight);
 
-    constructor(includeMouseEvents: boolean = false) {
-        super();
+    constructor(
+        readonly controls: MobileControls,
+        readonly includeMouseEvents: boolean = false
+    ) {
+    }
+
+    private onTouchEvent(event: TouchEvent) {
+        if (this.controls.stage.destroyed) return;
+        event.preventDefault();
+        event.stopPropagation();
+
+        this.mapAndUpdateTouches(event.touches);
+    }
+
+    private mapAndUpdateTouches(touches: TouchList) {
+        if (!this.view) return;
+        if (this.controls.stage.destroyed) return;
+
+        const rect = this.view.getBoundingClientRect();
+
+        const mapped: Touch[] = [];
+
+        for (const touch of touches) {
+            const relativeX =
+                (touch.pageX - rect.left) / (rect.right - rect.left);
+            const relativeY =
+                (touch.pageY - rect.top) / (rect.bottom - rect.top);
+
+            mapped.push({
+                identifier: touch.identifier,
+                position: new Vector2(
+                    relativeX * this.controls.width,
+                    relativeY * this.controls.height,
+                ),
+                claimedBy: null,
+            });
+        }
+
+        this.controls.updateTouches(mapped);
+    }
+
+    setup(): void {
+        for (const control of this.controls.controls) {
+            control.onChange(() => this.setNeedsRerender());
+        }
 
         this.renderer = PIXI.autoDetectRenderer<HTMLCanvasElement>({
             width: 1,
@@ -31,7 +78,6 @@ export abstract class StandaloneMobileControls extends MobileControls {
             this.view.style.top =
             this.view.style.bottom =
                 "0px";
-
         this.view.style.width = "100%";
         this.view.style.height = "100%";
 
@@ -55,26 +101,28 @@ export abstract class StandaloneMobileControls extends MobileControls {
 
         // Pointer cursor handling
         this.view.addEventListener("mousemove", (event) => {
-            this.hoveringControl = null;
+            this.controls.hoveringControl = null;
 
             const position = { x: event.pageX, y: event.pageY };
-            for (const control of this.controls) {
+            for (const control of this.controls.controls) {
                 if (
                     control.enabled &&
                     control instanceof Button &&
                     distance(control.view.position, position) < control.radius
                 ) {
-                    this.hoveringControl = control;
+                    this.controls.hoveringControl = control;
                     break;
                 }
             }
 
-            this.view.style.cursor = this.hoveringControl
+            if (!this.view) return;
+
+            this.view.style.cursor = this.controls.hoveringControl
                 ? "pointer"
                 : "inherit";
         });
 
-        if (includeMouseEvents) {
+        if (this.includeMouseEvents) {
             // Fake touches based on mouse events
             let mouseDown = false;
             this.view.addEventListener("mousedown", (event) => {
@@ -89,51 +137,20 @@ export abstract class StandaloneMobileControls extends MobileControls {
                 this.mapAndUpdateTouches([] as any as TouchList);
             });
         }
-    }
 
-    private onTouchEvent(event: TouchEvent) {
-        if (this.stage.destroyed) return;
-        event.preventDefault();
-        event.stopPropagation();
-
-        this.mapAndUpdateTouches(event.touches);
-    }
-
-    private mapAndUpdateTouches(touches: TouchList) {
-        if (this.stage.destroyed) return;
-
-        const rect = this.view.getBoundingClientRect();
-
-        const mapped: Touch[] = [];
-
-        for (const touch of touches) {
-            const relativeX =
-                (touch.pageX - rect.left) / (rect.right - rect.left);
-            const relativeY =
-                (touch.pageY - rect.top) / (rect.bottom - rect.top);
-
-            mapped.push({
-                identifier: touch.identifier,
-                position: new Vector2(
-                    relativeX * this.width,
-                    relativeY * this.height,
-                ),
-                claimedBy: null,
-            });
-        }
-
-        this.updateTouches(mapped);
-    }
-
-    setup(): void {
-        super.setup();
         this.resize(window.innerWidth, window.innerHeight);
     }
 
-    setVisible(visible: boolean) {
-        if (visible === this.visible) return;
-        this.visible = visible;
-        this.view.style.display = visible ? "block" : "none";
+    get visible(): boolean {
+        return this.#visible;
+    }
+
+    set visible(visible: boolean) {
+        if (visible === this.#visible) return;
+        this.#visible = visible;
+        if (this.view) {
+            this.view.style.display = visible ? "block" : "none";
+        }
         if (visible) this.setNeedsRerender();
     }
 
@@ -147,23 +164,26 @@ export abstract class StandaloneMobileControls extends MobileControls {
     }
 
     resize(width: number, height: number): void {
-        super.resize(width, height);
-        this.renderer.resize(window.innerWidth, window.innerHeight);
+        this.controls.resize(width, height);
+        this.renderer?.resize(window.innerWidth, window.innerHeight);
         this.setNeedsRerender();
         this.render();
     }
 
     render() {
-        if (!this.needsRerender) return;
-        if (this.stage.destroyed) return;
-        this.needsRerender = false;
-        this.renderer?.render(this.stage);
+        if (!this.#needsRerender) return;
+        if (this.controls.stage.destroyed) return;
+        this.#needsRerender = false;
+        this.renderer?.render(this.controls.stage);
     }
 
     destroy(): void {
-        super.destroy();
-
+        this.controls.destroy();
         this.renderer?.destroy(true);
         window.removeEventListener("resize", this.onWindowResizeListener);
+    }
+
+    setNeedsRerender() {
+        this.#needsRerender = true;
     }
 }

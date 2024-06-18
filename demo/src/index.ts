@@ -2,7 +2,8 @@ import { Rectangle } from "@remvst/geometry";
 import {
     Button,
     DynamicJoystick,
-    StandaloneMobileControls,
+    MobileControls,
+    StandaloneMobileControlsRenderer,
     linearLayout,
     radialLayout,
 } from "@remvst/mobile-controls";
@@ -11,7 +12,7 @@ import "pixi.js-legacy";
 import FireIcon from "../assets/fire.png";
 import UpIcon from "../assets/up.png";
 
-class MyControls extends StandaloneMobileControls {
+class MyControls extends MobileControls {
     readonly joystick = this.add(new DynamicJoystick());
     readonly button = this.add(new Button(Texture.from(UpIcon)));
     readonly fireButton = this.add(new Button(Texture.from(FireIcon)));
@@ -70,22 +71,28 @@ window.addEventListener("load", async () => {
     const upTexture = Texture.from(UpIcon);
     await upTexture.baseTexture.resource.load();
 
-    const controls = new MyControls(true);
-    controls.setResolution(window.devicePixelRatio);
+    const controls = new MyControls();
     controls.setup();
-    document.body.appendChild(controls.view);
+
+    const controlsRenderer = new StandaloneMobileControlsRenderer(controls, true);
+    controlsRenderer.setResolution(window.devicePixelRatio);
+    controlsRenderer.setup();
+    document.body.appendChild(controlsRenderer.view!);
 
     controls.button.retainsTouches = false;
     controls.button.onClick = () => console.log("pause!");
 
     controls.jumpButton.onClick = () => console.log("jump!");
 
-    controls.fireButton.onClick = () => controls.destroy();
+    controls.fireButton.onClick = () => {
+        controlsRenderer.destroy();
+        controls.destroy();
+    };
 
-    controls.setVisible(true);
+    controlsRenderer.visible = true;
 
     const render = () => {
-        controls.render();
+        controlsRenderer.render();
         requestAnimationFrame(render);
     };
     render();

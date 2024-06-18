@@ -8,8 +8,6 @@ export abstract class MobileControls {
 
     readonly stage = new PIXI.Container();
 
-    protected needsRerender = true;
-    protected visible = true;
     private readonly claimMap = new Map<number, Control>();
 
     readonly controls: Control[] = [];
@@ -37,12 +35,6 @@ export abstract class MobileControls {
         this.controls.push(control);
         this.stage.addChild(control.view);
         control.update([], this.previousTouchIdentifiers);
-
-        for (const control of this.controls) {
-            control.onChange(() => (this.needsRerender = true));
-        }
-
-        this.needsRerender = true;
 
         return control;
     }
@@ -90,9 +82,5 @@ export abstract class MobileControls {
         for (const touch of touches) {
             this.previousTouchIdentifiers.add(touch.identifier);
         }
-    }
-
-    setNeedsRerender() {
-        this.needsRerender = true;
     }
 }
