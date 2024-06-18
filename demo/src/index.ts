@@ -2,7 +2,7 @@ import { Rectangle } from "@remvst/geometry";
 import {
     Button,
     DynamicJoystick,
-    MobileControls,
+    StandaloneMobileControls,
     linearLayout,
     radialLayout,
 } from "@remvst/mobile-controls";
@@ -11,7 +11,7 @@ import "pixi.js-legacy";
 import FireIcon from "../assets/fire.png";
 import UpIcon from "../assets/up.png";
 
-class MyControls extends MobileControls {
+class MyControls extends StandaloneMobileControls {
     readonly joystick = this.add(new DynamicJoystick());
     readonly button = this.add(new Button(Texture.from(UpIcon)));
     readonly fireButton = this.add(new Button(Texture.from(FireIcon)));
@@ -46,7 +46,7 @@ class MyControls extends MobileControls {
             ],
             { x: width - 100, y: height - 100 },
             this.jumpButton.radius + 20,
-            0,
+            Math.PI / 2,
         );
 
         this.joystick.claimArea.update(
@@ -76,9 +76,13 @@ window.addEventListener("load", async () => {
     document.body.appendChild(controls.view);
 
     controls.button.retainsTouches = false;
-    controls.button.onClick = () => console.log("jump!");
+    controls.button.onClick = () => console.log("pause!");
+
+    controls.jumpButton.onClick = () => console.log("jump!");
 
     controls.fireButton.onClick = () => controls.destroy();
+
+    controls.setVisible(true);
 
     const render = () => {
         controls.render();
