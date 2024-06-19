@@ -11,19 +11,19 @@ export class MobileControlsTouchHandler {
 
     setup() {
         this.listeners.push(
-            addEventListener(this.element, "contextmenu", (event) =>
+            addEventListener(document.body, "contextmenu", (event) =>
                 event.preventDefault(),
             ),
-            addEventListener(this.element, "touchstart", (event) =>
+            addEventListener(document.body, "touchstart", (event) =>
                 this.onTouchEvent(event),
             ),
-            addEventListener(this.element, "touchmove", (event) =>
+            addEventListener(document.body, "touchmove", (event) =>
                 this.onTouchEvent(event),
             ),
-            addEventListener(this.element, "touchend", (event) =>
+            addEventListener(document.body, "touchend", (event) =>
                 this.onTouchEvent(event),
             ),
-            addEventListener(this.element, "touchcancel", (event) =>
+            addEventListener(document.body, "touchcancel", (event) =>
                 this.onTouchEvent(event),
             ),
         );
@@ -33,6 +33,7 @@ export class MobileControlsTouchHandler {
         for (const listener of this.listeners) {
             listener();
         }
+        this.listeners.splice(0, this.listeners.length);
     }
 
     private onTouchEvent(event: TouchEvent) {

@@ -16,7 +16,7 @@ export class MobileControlsMouseHandler {
 
         // Handle cursor changes
         this.listeners.push(
-            addEventListener(this.element, "mousemove", (event) => {
+            addEventListener(document.body, "mousemove", (event) => {
                 this.controls.hoveringControl = null;
 
                 const position = { x: event.pageX, y: event.pageY };
@@ -36,19 +36,19 @@ export class MobileControlsMouseHandler {
                     ? "pointer"
                     : "inherit";
             }),
-            addEventListener(this.element, "mousedown", (event) => {
+            addEventListener(document.body, "mousedown", (event) => {
                 mouseDown = true;
                 mapAndUpdateTouches(this.element, this.controls, [
                     event,
                 ] as any as TouchList);
             }),
-            addEventListener(this.element, "mousemove", (event) => {
+            addEventListener(document.body, "mousemove", (event) => {
                 if (mouseDown)
                     mapAndUpdateTouches(this.element, this.controls, [
                         event,
                     ] as any as TouchList);
             }),
-            addEventListener(this.element, "mouseup", (event) => {
+            addEventListener(document.body, "mouseup", (event) => {
                 mouseDown = false;
                 mapAndUpdateTouches(
                     this.element,
@@ -63,5 +63,6 @@ export class MobileControlsMouseHandler {
         for (const listener of this.listeners) {
             listener();
         }
+        this.listeners.splice(0, this.listeners.length);
     }
 }

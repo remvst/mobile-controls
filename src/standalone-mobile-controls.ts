@@ -87,7 +87,7 @@ export class StandaloneMobileControlsRenderer {
 
     resize(width: number, height: number): void {
         this.controls.resize(width, height);
-        this.renderer?.resize(window.innerWidth, window.innerHeight);
+        this.renderer?.resize(width, height);
         this.setNeedsRerender();
         this.render();
     }
@@ -96,6 +96,7 @@ export class StandaloneMobileControlsRenderer {
         if (!this.#needsRerender) return;
         if (this.controls.stage.destroyed) return;
         this.#needsRerender = false;
+        console.log('k lol render');
         this.renderer?.render(this.controls.stage);
     }
 
