@@ -55,11 +55,13 @@ export class StandaloneMobileControlsRenderer {
         );
         this.touchHandler?.setup();
 
-        this.mouseHandler = new MobileControlsMouseHandler(
-            this.controls,
-            this.view,
-        );
-        this.mouseHandler?.setup();
+        if (this.includeMouseEvents) {
+            this.mouseHandler = new MobileControlsMouseHandler(
+                this.controls,
+                this.view,
+            );
+            this.mouseHandler?.setup();
+        }
 
         this.resize(window.innerWidth, window.innerHeight);
     }
