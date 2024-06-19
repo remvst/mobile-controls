@@ -14,7 +14,7 @@ export class Button implements Control {
     })();
     readonly outline = (() => {
         const view = new Graphics();
-        view.lineStyle({ color: 0xffffff, width: 1 });
+        view.lineStyle({ color: 0xffffff, width: 2 });
         view.drawCircle(0, 0, this.radius);
         return view;
     })();
