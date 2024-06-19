@@ -2,11 +2,12 @@ import { Vector2Like, distance } from "@remvst/geometry";
 import { Container, Graphics } from "pixi.js";
 import { Control } from "./control";
 import { Touch } from "./touch";
+import { EventHub } from "./event-emitter";
 
 export class Joystick implements Control {
     #enabled = true;
 
-    private resetJoystickAnimationFrame: number | null = null;
+    #resetJoystickAnimationFrame: number | null = null;
 
     angle: number = 0;
     force: number = 0;
@@ -17,7 +18,7 @@ export class Joystick implements Control {
     private readonly wiggleView = new Graphics();
     private readonly stickView = new Graphics();
 
-    private readonly onChangeListeners: ((joystick: Joystick) => void)[] = [];
+    readonly onChange = new EventHub<void>();
 
     touchIdentifier: number | null = null;
 
@@ -54,13 +55,7 @@ export class Joystick implements Control {
         this.updateView();
 
         if (enabled !== oldValue) {
-            this.notifyChanged();
-        }
-    }
-
-    protected notifyChanged() {
-        for (const listener of this.onChangeListeners) {
-            listener(this);
+            this.onChange.emit();
         }
     }
 
@@ -113,15 +108,16 @@ export class Joystick implements Control {
 
         if (isTouchingJoystick) {
             this.displayedForce = this.force;
-            if (this.resetJoystickAnimationFrame) {
-                cancelAnimationFrame(this.resetJoystickAnimationFrame);
+            if (this.#resetJoystickAnimationFrame) {
+                cancelAnimationFrame(this.#resetJoystickAnimationFrame);
+                this.#resetJoystickAnimationFrame = null;
             }
         }
 
         this.updateView();
 
         if (this.angle !== oldAngle || this.force !== oldForce) {
-            this.notifyChanged();
+            this.onChange.emit();
         }
     }
 
@@ -138,10 +134,10 @@ export class Joystick implements Control {
             this.displayedForce = (0 - initialForce) * progress + initialForce;
 
             this.updateView();
-            this.notifyChanged();
+            this.onChange.emit();
 
             if (progress < 1) {
-                this.resetJoystickAnimationFrame = requestAnimationFrame(frame);
+                this.#resetJoystickAnimationFrame = requestAnimationFrame(frame);
             }
         };
 
@@ -154,9 +150,5 @@ export class Joystick implements Control {
             Math.cos(this.angle) * this.displayedForce * this.radius,
             Math.sin(this.angle) * this.displayedForce * this.radius,
         );
-    }
-
-    onChange(listener: (control: Joystick) => void): void {
-        this.onChangeListeners.push(listener);
     }
 }

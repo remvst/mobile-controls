@@ -24,7 +24,7 @@ export class StandaloneMobileControlsRenderer {
 
     setup(): void {
         for (const control of this.controls.controls) {
-            control.onChange(() => this.setNeedsRerender());
+            control.onChange.listen(() => this.setNeedsRerender());
         }
 
         this.renderer = PIXI.autoDetectRenderer<HTMLCanvasElement>({

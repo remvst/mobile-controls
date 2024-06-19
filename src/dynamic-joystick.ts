@@ -8,7 +8,7 @@ import { Touch } from "./touch";
 export class DynamicJoystick extends Joystick {
     readonly claimArea = new Rectangle();
 
-    private raf: number | null = null;
+    #fadeAnimationFrame: number | null = null;
 
     constructor() {
         super();
@@ -26,7 +26,7 @@ export class DynamicJoystick extends Joystick {
 
                 touch.claimedBy = this;
                 this.view.position.copyFrom(touch.position);
-                this.notifyChanged();
+                this.onChange.emit();
                 break;
             }
         }
@@ -34,8 +34,13 @@ export class DynamicJoystick extends Joystick {
         super.update(touches, previousTouchIdentifiers);
 
         if (this.isActive && !wasActive) {
+            if (this.#fadeAnimationFrame) {
+                cancelAnimationFrame(this.#fadeAnimationFrame);
+                this.#fadeAnimationFrame = null;
+            }
+
             this.view.alpha = 1;
-            this.notifyChanged();
+            this.onChange.emit();
         }
     }
 
@@ -49,10 +54,10 @@ export class DynamicJoystick extends Joystick {
             this.view.alpha = 1 - progress;
 
             this.updateView();
-            this.notifyChanged();
+            this.onChange.emit();
 
             if (progress < 1) {
-                this.raf = requestAnimationFrame(frame);
+                this.#fadeAnimationFrame = requestAnimationFrame(frame);
             }
         };
 

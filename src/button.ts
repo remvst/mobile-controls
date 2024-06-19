@@ -2,6 +2,7 @@ import { Rectangle, Vector2Like, distance } from "@remvst/geometry";
 import { Container, Graphics, Sprite, Texture } from "pixi.js";
 import { Control } from "./control";
 import { Touch } from "./touch";
+import { EventHub } from "./event-emitter";
 
 export class Button implements Control {
     readonly view = new Container();
@@ -33,10 +34,9 @@ export class Button implements Control {
 
     retainsTouches = true;
 
-    onDownStateChanged: (down: boolean) => void = () => {};
-    onClick: () => void = () => {};
-
-    private readonly onChangeListeners: (() => void)[] = [];
+    readonly onDownStateChanged = new EventHub<boolean>();
+    readonly onClick = new EventHub();
+    readonly onChange = new EventHub();
 
     touchIdentifier: number | null = null;
     touchArea: Rectangle | null = null;
@@ -45,15 +45,9 @@ export class Button implements Control {
         readonly icon: Texture,
         readonly radius: number = 35,
     ) {
-        icon.on("update", () => this.notifyOnChange());
+        icon.on("update", () => this.onChange.emit());
 
         this.view.addChild(this.shapeView, this.iconView, this.outline);
-    }
-
-    private notifyOnChange() {
-        for (const listener of this.onChangeListeners) {
-            listener();
-        }
     }
 
     get position(): Vector2Like {
@@ -78,7 +72,7 @@ export class Button implements Control {
         this.updateView();
 
         if (enabled !== oldValue) {
-            this.notifyOnChange();
+            this.onChange.emit();
         }
     }
 
@@ -92,7 +86,7 @@ export class Button implements Control {
         this.updateView();
 
         if (hovered !== oldValue) {
-            this.notifyOnChange();
+            this.onChange.emit();
         }
     }
 
@@ -145,13 +139,13 @@ export class Button implements Control {
         }
 
         if (this.isDown !== wasDown) {
-            this.onDownStateChanged(this.isDown);
+            this.onDownStateChanged.emit(this.isDown);
 
             if (wasDown && !previousTouchIdentifierWasSeen) {
-                this.onClick();
+                this.onClick.emit();
             }
 
-            this.notifyOnChange();
+            this.onChange.emit();
         }
 
         this.updateView();
@@ -162,9 +156,5 @@ export class Button implements Control {
         this.shapeView.tint = this.isDown ? 0xffffff : 0x0;
         this.outline.visible = this.hovered;
         this.iconView.tint = this.isDown ? 0x0 : 0xffffff;
-    }
-
-    onChange(listener: () => void): void {
-        this.onChangeListeners.push(listener);
     }
 }

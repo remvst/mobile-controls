@@ -83,14 +83,14 @@ window.addEventListener("load", async () => {
     document.body.appendChild(controlsRenderer.view!);
 
     controls.button.retainsTouches = false;
-    controls.button.onClick = () => console.log("pause!");
+    controls.button.onClick.listen(() => console.log("pause!"));
 
-    controls.jumpButton.onClick = () => console.log("jump!");
+    controls.jumpButton.onClick.listen(() => console.log("jump!"));
 
-    controls.fireButton.onClick = () => {
+    controls.fireButton.onClick.listen(() => {
         controlsRenderer.destroy();
         controls.destroy();
-    };
+    });
 
     controlsRenderer.visible = true;
 

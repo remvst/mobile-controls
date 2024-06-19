@@ -1,6 +1,7 @@
 import { Vector2Like } from "@remvst/geometry";
 import { DisplayObject } from "pixi.js";
 import { Touch } from "./touch";
+import { EventEmitter } from "./event-emitter";
 
 export interface Control {
     // State
@@ -19,5 +20,5 @@ export interface Control {
     touchIdentifier: number | null;
 
     // Listeners
-    onChange(listener: () => void): void;
+    readonly onChange: EventEmitter<void>;
 }
