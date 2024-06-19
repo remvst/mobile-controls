@@ -4,7 +4,7 @@ import { Control } from "./control";
 import { Touch } from "./touch";
 
 export class Joystick implements Control {
-    private _enabled = true;
+    #enabled = true;
 
     private resetJoystickAnimationFrame: number | null = null;
 
@@ -45,12 +45,12 @@ export class Joystick implements Control {
     }
 
     get enabled() {
-        return this._enabled;
+        return this.#enabled;
     }
 
     set enabled(enabled: boolean) {
-        const oldValue = this._enabled;
-        this._enabled = enabled;
+        const oldValue = this.#enabled;
+        this.#enabled = enabled;
         this.updateView();
 
         if (enabled !== oldValue) {
@@ -113,6 +113,9 @@ export class Joystick implements Control {
 
         if (isTouchingJoystick) {
             this.displayedForce = this.force;
+            if (this.resetJoystickAnimationFrame) {
+                cancelAnimationFrame(this.resetJoystickAnimationFrame);
+            }
         }
 
         this.updateView();

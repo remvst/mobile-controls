@@ -1,10 +1,13 @@
 import { distance } from "@remvst/geometry";
 import { Button } from "./button";
+import { Control } from "./control";
 import { MobileControls } from "./mobile-controls";
 import { addEventListener, mapAndUpdateTouches } from "./utils";
 
 export class MobileControlsMouseHandler {
     private readonly listeners: (() => void)[] = [];
+
+    hoveringControl: Control | null = null;
 
     constructor(
         private readonly controls: MobileControls,
@@ -17,7 +20,7 @@ export class MobileControlsMouseHandler {
         // Handle cursor changes
         this.listeners.push(
             addEventListener(document.body, "mousemove", (event) => {
-                this.controls.hoveringControl = null;
+                this.hoveringControl = null;
 
                 const position = { x: event.pageX, y: event.pageY };
                 for (const control of this.controls.controls) {
@@ -27,12 +30,18 @@ export class MobileControlsMouseHandler {
                         distance(control.view.position, position) <
                             control.radius
                     ) {
-                        this.controls.hoveringControl = control;
+                        this.hoveringControl = control;
                         break;
                     }
                 }
 
-                this.element.style.cursor = this.controls.hoveringControl
+                for (const control of this.controls.controls) {
+                    if (control instanceof Button) {
+                        control.hovered = control === this.hoveringControl;
+                    }
+                }
+
+                this.element.style.cursor = this.hoveringControl
                     ? "pointer"
                     : "inherit";
             }),

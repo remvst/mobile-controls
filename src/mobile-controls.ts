@@ -11,7 +11,6 @@ export abstract class MobileControls {
     private readonly claimMap = new Map<number, Control>();
 
     readonly controls: Control[] = [];
-    hoveringControl: Control | null = null;
 
     private readonly previousTouchIdentifiers = new Set<number>();
 
