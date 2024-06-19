@@ -1,8 +1,8 @@
 import { Vector2Like, distance } from "@remvst/geometry";
 import { Container, Graphics } from "pixi.js";
 import { Control } from "./control";
-import { Touch } from "./touch";
 import { EventHub } from "./event-emitter";
+import { Touch } from "./touch";
 
 export class Joystick implements Control {
     #enabled = true;
@@ -137,7 +137,8 @@ export class Joystick implements Control {
             this.onChange.emit();
 
             if (progress < 1) {
-                this.#resetJoystickAnimationFrame = requestAnimationFrame(frame);
+                this.#resetJoystickAnimationFrame =
+                    requestAnimationFrame(frame);
             }
         };
 

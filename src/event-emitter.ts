@@ -6,7 +6,6 @@ export interface EventEmitter<ParamType> {
 }
 
 export class EventHub<ParamType = void> implements EventEmitter<ParamType> {
-
     #listeners = new Set<Listener<ParamType>>();
 
     listen(listener: Listener<ParamType>): void {

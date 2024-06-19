@@ -1,8 +1,8 @@
 import { Rectangle, Vector2Like, distance } from "@remvst/geometry";
 import { Container, Graphics, Sprite, Texture } from "pixi.js";
 import { Control } from "./control";
-import { Touch } from "./touch";
 import { EventHub } from "./event-emitter";
+import { Touch } from "./touch";
 
 export class Button implements Control {
     readonly view = new Container();

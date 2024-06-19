@@ -1,7 +1,7 @@
 import { Vector2Like } from "@remvst/geometry";
 import { DisplayObject } from "pixi.js";
-import { Touch } from "./touch";
 import { EventEmitter } from "./event-emitter";
+import { Touch } from "./touch";
 
 export interface Control {
     // State
