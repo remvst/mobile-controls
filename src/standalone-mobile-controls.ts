@@ -6,6 +6,7 @@ import { MobileControlsTouchHandler } from "./mobile-controls-touch-handler";
 export class StandaloneMobileControlsRenderer {
     #visible = true;
     #needsRerender = true;
+    #resolution = 1;
 
     view?: HTMLCanvasElement;
     private renderer?: PIXI.IRenderer<HTMLCanvasElement>;
@@ -27,9 +28,9 @@ export class StandaloneMobileControlsRenderer {
         }
 
         this.renderer = PIXI.autoDetectRenderer<HTMLCanvasElement>({
-            width: 1,
-            height: 1,
-            resolution: 1,
+            width: window.innerWidth,
+            height: window.innerHeight,
+            resolution: this.#resolution,
             antialias: true,
             backgroundAlpha: 0,
             clearBeforeRender: true,
@@ -77,6 +78,8 @@ export class StandaloneMobileControlsRenderer {
     }
 
     setResolution(resolution: number) {
+        this.#resolution = resolution;
+
         if (this.renderer) {
             this.renderer.resolution = resolution;
         }
@@ -96,7 +99,6 @@ export class StandaloneMobileControlsRenderer {
         if (!this.#needsRerender) return;
         if (this.controls.stage.destroyed) return;
         this.#needsRerender = false;
-        console.log('k lol render');
         this.renderer?.render(this.controls.stage);
     }
 
