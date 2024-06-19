@@ -36,7 +36,7 @@ export class Button implements Control {
     onDownStateChanged: (down: boolean) => void = () => {};
     onClick: () => void = () => {};
 
-    private readonly onChangeListeners: ((button: Button) => void)[] = [];
+    private readonly onChangeListeners: (() => void)[] = [];
 
     touchIdentifier: number | null = null;
     touchArea: Rectangle | null = null;
@@ -45,13 +45,15 @@ export class Button implements Control {
         readonly icon: Texture,
         readonly radius: number = 35,
     ) {
-        icon.on("update", () => {
-            for (const listener of this.onChangeListeners) {
-                listener(this);
-            }
-        });
+        icon.on("update", () => this.notifyOnChange());
 
         this.view.addChild(this.shapeView, this.iconView, this.outline);
+    }
+
+    private notifyOnChange() {
+        for (const listener of this.onChangeListeners) {
+            listener();
+        }
     }
 
     get position(): Vector2Like {
@@ -76,9 +78,7 @@ export class Button implements Control {
         this.updateView();
 
         if (enabled !== oldValue) {
-            for (const listener of this.onChangeListeners) {
-                listener(this);
-            }
+            this.notifyOnChange();
         }
     }
 
@@ -92,9 +92,7 @@ export class Button implements Control {
         this.updateView();
 
         if (hovered !== oldValue) {
-            for (const listener of this.onChangeListeners) {
-                listener(this);
-            }
+            this.notifyOnChange();
         }
     }
 
@@ -153,9 +151,7 @@ export class Button implements Control {
                 this.onClick();
             }
 
-            for (const listener of this.onChangeListeners) {
-                listener(this);
-            }
+            this.notifyOnChange();
         }
 
         this.updateView();
@@ -168,7 +164,7 @@ export class Button implements Control {
         this.iconView.tint = this.isDown ? 0x0 : 0xffffff;
     }
 
-    onChange(listener: (control: Button) => void): void {
+    onChange(listener: () => void): void {
         this.onChangeListeners.push(listener);
     }
 }

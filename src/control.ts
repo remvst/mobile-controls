@@ -19,5 +19,5 @@ export interface Control {
     touchIdentifier: number | null;
 
     // Listeners
-    onChange(listener: (control: ThisType<this>) => void): void;
+    onChange(listener: () => void): void;
 }
