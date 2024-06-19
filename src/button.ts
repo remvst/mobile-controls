@@ -1,7 +1,6 @@
 import { Rectangle, Vector2Like, distance } from "@remvst/geometry";
 import { Container, Graphics, Sprite, Texture } from "pixi.js";
 import { Control } from "./control";
-import { MobileControls } from "./mobile-controls";
 import { Touch } from "./touch";
 
 export class Button implements Control {
@@ -26,8 +25,6 @@ export class Button implements Control {
         view.anchor.set(0.5, 0.5);
         return view;
     })();
-
-    parent: MobileControls = null!;
 
     #enabled = true;
     #hovered = false;
