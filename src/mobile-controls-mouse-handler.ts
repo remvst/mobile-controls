@@ -21,8 +21,7 @@ export class MobileControlsMouseHandler {
             if (
                 control.enabled &&
                 control instanceof Button &&
-                distance(control.view.position, position) <
-                    control.radius
+                distance(control.view.position, position) < control.radius
             ) {
                 this.hoveringControl = control;
                 break;
