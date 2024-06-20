@@ -15,9 +15,7 @@ export abstract class MobileControls {
 
     abstract updateLayout(width: number, height: number): void;
 
-    setup(): void {
-
-    }
+    setup(): void {}
 
     destroy(): void {
         this.stage.destroy({
