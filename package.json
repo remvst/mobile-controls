@@ -1,7 +1,7 @@
 {
     "name": "@remvst/mobile-controls",
     "version": "2.0.0",
-    "description": "Virtual controls for touch devices",
+    "description": "Virtual controls for touchscreens",
     "main": "lib/index.js",
     "scripts": {
         "prettier:fix": "prettier . --write",
