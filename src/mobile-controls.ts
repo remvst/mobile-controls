@@ -15,9 +15,11 @@ export abstract class MobileControls {
 
     abstract updateLayout(width: number, height: number): void;
 
-    abstract setup(): void;
+    setup(): void {
 
-    destroy() {
+    }
+
+    destroy(): void {
         this.stage.destroy({
             children: true,
             baseTexture: false,
