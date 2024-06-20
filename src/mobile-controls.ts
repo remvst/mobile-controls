@@ -14,13 +14,9 @@ export abstract class MobileControls {
 
     private readonly previousTouchIdentifiers = new Set<number>();
 
-    addControls(): void {}
-
     abstract updateLayout(width: number, height: number): void;
 
-    setup() {
-        this.addControls();
-    }
+    abstract setup(): void;
 
     destroy() {
         this.stage.destroy({
