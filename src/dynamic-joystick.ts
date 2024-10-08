@@ -49,6 +49,8 @@ export class DynamicJoystick extends Joystick {
         const start = performance.now();
 
         const frame = () => {
+            if (this.view.destroyed) return;
+
             const now = performance.now();
             const progress = Math.min((now - start) / 200, 1);
             this.view.alpha = 1 - progress;
@@ -62,11 +64,5 @@ export class DynamicJoystick extends Joystick {
         };
 
         frame();
-    }
-
-    updateView() {
-        // if (this.isActive) {
-        super.updateView();
-        // }
     }
 }

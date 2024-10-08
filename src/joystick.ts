@@ -129,6 +129,8 @@ export class Joystick implements Control {
         const initialForce = this.displayedForce;
 
         const frame = () => {
+            if (this.view.destroyed) return;
+
             const now = performance.now();
             const progress = Math.min((now - start) / 200, 1);
             this.displayedForce = (0 - initialForce) * progress + initialForce;
